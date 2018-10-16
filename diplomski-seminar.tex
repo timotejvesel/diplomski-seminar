@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{amsart}
+\documentclass[12pt,a4paper, reqno]{amsart}
 % ukazi za delo s slovenscino -- izberi kodiranje, ki ti ustreza
 \usepackage[slovene]{babel}
 %\usepackage[cp1250]{inputenc}
@@ -44,7 +44,6 @@
 \newcommand{\Q}{\mathbb Q}
 \newcommand{\E}{\mathbb E}
 \newcommand{\U}{\boldsymbol U}
-
 
 % ukaz za slovarsko geslo
 \newlength{\odstavek}
@@ -128,7 +127,7 @@ V praksi takšnega integrala za večino funkcij ne znamo izračunati eksaktno za
 \vspace{5mm}
 \section{Metoda Monte Carlo}
 \vspace{3mm}
-\textit{Metoda Monte Carlo (MC)} se uporablja za izračun približka pričakovane vrednosti $\E(X)$ slučajne spremenljvke $X$. Vzemimo  funkcijo $f : (0,1)^s \rightarrow \R$ in naj bo $ \boldsymbol{u} 	= (u_1,\ldots,u_s) \in (0,1)^s$ in $\boldsymbol{U} \sim \mathcal{U}(0,1)^s$ slučajni vektor (enakomerno porazdeljen na $s$-razsežni hiperkocki). Potem lahko zapišemo 
+\textit{Metoda Monte Carlo (MC)} se uporablja za izračun približka pričakovane vrednosti $\E(X)$ slučajne spremenljvke $X$. Vzemimo  funkcijo $f : (0,1)^s \rightarrow \R$ in naj bo $ \boldsymbol{u} = (u_1,\ldots,u_s) \in (0,1)^s$ in $\boldsymbol{U} \sim \mathcal{U}(0,1)^s$ slučajni vektor (enakomerno porazdeljen na $s$-razsežni hiperkocki). Potem lahko zapišemo 
 \[I(f) = \int_{0}^{1}\cdots \int_{0}^{1}f(u_1,\ldots,u_s)du_1\cdots du_s = \int_{[0,1]^s} f(\boldsymbol u) d \boldsymbol u = \E[f(\boldsymbol U]
 \]
 \begin{izrek}[Krepki zakon velikih števil Kolmogorova]
@@ -164,7 +163,7 @@ SKN[Q_n(f)] & = \E[(Q_n(f) - \E[f(\U)] \\
 & = \frac{Var[f(\U)]}{n},
 \end{split}
 \]
-kjer je $\sigma^2_f = Var[f(\U)] = \int_{(0,1)^s} f^2(\boldsymbol u) d \boldsymbol u - I^{2}(f)$.
+kjer je $\sigma^2_f = Var[f(\U)] = \int_{(0,1)^s} f^2(\boldsymbol u) d \boldsymbol u - I^{2}(f)$ in zadnja enakost velja, ker so $\U_i$ neodvisni in enako porazdeljeni slučajni vektorji.
 Parameter  $\sigma^2_f$ nam ponavadi ni eksplicitno poznan, vendar ga lahko statistično ocenimo z vzorčno disperzijo 
 \[
 S^2 = \frac{1}{n-1}\sum_{i=0}^{n-1}(f(\U_i) - Q_n(f))^2.
@@ -174,7 +173,62 @@ Pravimo, da je konvergenca Monte Carlo Metode reda ``$1/\sqrt{n}$'', kar označi
 
 Izkaže se, da so za probleme nizkih dimenzij determistična integralska pravila učinkovitejša za gladke funkcije, v višjih dimenzijah pa so Monte Carlo metode veliko hitrejše.
 
-Kljub temu, da so Monte Carlo metode večinoma hitrješe od kvadaturnih pravil in so zelo široko uporabljene, pa je red konvergence  $\mathcal {O}(1/\sqrt{n})$ velikokrat prepočasen za praktično uporabo. Za zmanjšanje variance obstajajo različne tehnike (npr. stratifikacija), vendar v praksi MC metode pogosto ostanejo precej počasne.
+Kljub temu, da so Monte Carlo metode večinoma hitrješe od kvadaturnih pravil in so zelo široko uporabljene, pa je red konvergence  $\mathcal {O}(1/\sqrt{n})$ velikokrat prepočasen za praktično uporabo. Za zmanjšanje variance obstajajo različne tehnike (npr. stratifikacija), vendar v praksi MC metode pogosto ostanejo prepočasne.
+
+\vspace{5mm}
+\section{Kvazi-Monte Carlo metode}
+\vspace{3mm}
+
+\textit{Kvazi-Monte Carlo (QMC) metode} so deterministična različica Monte Carlo metod. Pri QMC metodah zamenjamo neodvisne slučajne točke $\U_i$ z množico determinističnih  točk, ki hiperkocko $[0,1)^s$ pokrijejo bolj enakomerno.
+
+ Recimo, da je naš cilj izračunati:
+\[
+I(f) = \int_{[0,1)^s} f(\boldsymbol u)d\boldsymbol u.
+\] 
+Opazimo, da je območje integracije nekoliko drugačno kot pri MC metodi, kjer je vseeno ali vključimo robove hiperkocke. Pri QMC pa so nekater metode takšne, da imajo deterministične točke pogosto koordinate v 0, prav tako to zahtevajo nekatere definicije, ki jh bomo potrebovali za QMC .
+
+QMC ocena zgornjega problema pa je podobna oceni za standardno MC metodo.
+
+\begin{definicija}{(Kvazi-Monte Carlo ocena).} 
+Naj bodo $\boldsymbol u_0,\boldsymbol u_1,\ldots,\boldsymbol u_{n-1}$ (``deterministično'') izbrane točke v hiperkocki $[0,1)^s$. QMC ocena integrala $I(f)$ je definirana kot
+\[
+\overline{I}_{QMC} = \frac{1}{n} \sum_{i=0}^{n} f(\boldsymbol u_i).
+\]
+\end{definicija}
+\vspace{1mm}
+
+\begin{definicija}{(Diskrepanca??)}.
+Naj bo $\mathcal{B}$ družina vseh podmnožic $B \subset[0,1)^s$. Diskrepanca množice točk $P = \{\boldsymbol x_1,\ldots,\boldsymbol x_n\}$ je definirana kot
+
+\begin{equation}
+D_n(P) =\sup\limits_{B \in \mathcal{B}}\left\lvert\frac{\sum_{i = 1}^n \mathbb {I}_B(\boldsymbol x_i)}{n} - \lambda(B) \right\rvert,
+\end{equation}
+kjer je 
+\vspace{2mm}
+\[
+\mathbb{I}_B(\boldsymbol x_i) =
+  \begin{cases}
+  1; & \mbox{točka $\boldsymbol x_i$ je v množici $B$,} \\	
+  0; & \mbox{sicer}$$
+  \end{cases}
+  \] 
+  \\[2mm]
+ in $\lambda(B)$ je Lebesgueova mera?? (oz. $n$-dimenzionalni volumen???) množice $B$.
+\end{definicija}
+
+
+\begin{definicija}{(Star Discrepancy)}. Naj bo $\mathcal{J}^*$ družina vseh podinteravalov $J* \subset [0,1)^s$ oblike $\prod\limits_{i=1}^s [0,u_i), 0 \leq u_i \leq 1$ (poznani tudi kot ??zasidrane škatle?? anchored boxes), the star discrepancy?? množice točk $P=\{\boldsymbol x_1, \ldots, \boldsymbol x_n \}$ v $[0,1)^s, D^*_n(P)$, je definirana kot v enačbi (1) z $\mathcal{J}^* = \mathcal{B}$.
+\end{definicija}
+
+
+Deterministična zaporedja, na katerih temeljijo Kvazi-Monte Carlo metode se imenujejo \textit{zaporedja z nizko diskrepanco?? (low-discepancy sequences)}.
+
+\begin{definicija}{(Zaporedja z nizko diskrepanco)}.
+Zaporedje točk $P = \{\boldsymbol x_n\}_{n\in \N} \subset [0,1)^s$ se imenuje zaporedje z nizko diskrepanco, če je star discerpancy  $D^*_n(P)$ prvih $n$ točk množice $P$ enaka $\mathcal{O}(\frac{ln^sn}{n})$.
+\end{definicija}
+
+
+
 % slovar
 %\section*{Slovar strokovnih izrazov}
 
