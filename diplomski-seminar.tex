@@ -8,6 +8,7 @@
 \usepackage{url}
 %\usepackage[normalem]{ulem}
 \usepackage[dvipsnames,usenames]{color}
+\usepackage{graphicx}
 
 % ne spreminjaj podatkov, ki vplivajo na obliko strani
 \textwidth 15cm
@@ -213,20 +214,48 @@ kjer je
   \end{cases}
   \] 
   \\[2mm]
- in $\lambda(B)$ je Lebesgueova mera?? (oz. $n$-dimenzionalni volumen???) množice $B$.
+ in $\lambda(B)$ je Lebesgueova mera?? oziroma, ker je $B$ $n$-dimenzionalna škatla ( n-orthotope??), kar $n$-dimenzionalni volumen???) množice $B$.
 \end{definicija}
 
 
-\begin{definicija}{(Star Discrepancy)}. Naj bo $\mathcal{J}^*$ družina vseh podinteravalov $J* \subset [0,1)^s$ oblike $\prod\limits_{i=1}^s [0,u_i), 0 \leq u_i \leq 1$ (poznani tudi kot ??zasidrane škatle?? anchored boxes), the star discrepancy?? množice točk $P=\{\boldsymbol x_1, \ldots, \boldsymbol x_n \}$ v $[0,1)^s, D^*_n(P)$, je definirana kot v enačbi (1) z $\mathcal{J}^* = \mathcal{B}$.
+\begin{definicija}{(Star Discrepancy)}. Naj bo $\mathcal{J}^*$ družina vseh podinteravalov $J^*\subset [0,1)^s$ oblike $\prod\limits_{i=1}^s [0,u_i), 0 \leq u_i \leq 1$ (poznani tudi kot ??zasidrane škatle?? anchored boxes), the star discrepancy?? množice točk $P=\{\boldsymbol x_1, \ldots, \boldsymbol x_n \}$ v $[0,1)^s, D^*_n(P)$, je definirana kot v enačbi (1) z $\mathcal{J}^* = \mathcal{B}$.
 \end{definicija}
 
+Slika 1 prikazuje to diskrepanco. Na sliki so zasidrana škatla $[0,a) = [0,0.4) \times [0,0.8) \in [0,1)^2$ in množica $n=20$ točk. Zasidrana škatla vsebuje 5 izmed 20 točk, zato je $\frac{1}{n}\sum_{i = 1}^n \mathbb {I}_{0\leq \boldsymbol{x}_i<a} (\boldsymbol x_i)=0.20$. Ploščina (volumen) zasidrane škatle pa je 0.32, zato je $|0.2 - 0.32|=0.12$. The star diskrepanco $D_{20}^*$ najdemo z maksimiziranjem razlike po vseh zasidranih škatlah $[0,a)$.
 
-Deterministična zaporedja, na katerih temeljijo Kvazi-Monte Carlo metode se imenujejo \textit{zaporedja z nizko diskrepanco?? (low-discepancy sequences)}.
+\includegraphics [width=14cm, height=14cm]{discrepancy.pdf}
+\vspace{3mm}
+
+\noindent Slika 1: V enotskem kvadratu je prikazanih 20 točk in zasidrana škatla (senčeno) od $(0,0)$ do $a = (0.4,0.8)$. zasidrana škatla ima ploščino 0.32 in vsebuje $5/20 = 0.2$ vseh točk. 
+
+\vspace{3mm}
+Za $\boldsymbol{x}_i \sim \mathcal{U}[0,1)^s$ je Chung pokazal, da je
+\begin{equation}
+\limsup_{n \to \infty} \frac{\sqrt{2n}D_n^*}{\sqrt{log (log(n))}} = 1,
+\end{equation}
+torej je $D_n^* = \mathcal{O}((\frac{log\mbox{ }log(n)}{n})^\frac{1}{2})$ z verjetnostjo 1. Ko se $n$ povečuje, logaritem raste zelo počasi, zato bo $D_n^*$ le malo boljša kot $\mathcal O(1/\sqrt{n})$ za velike $n$.
+\vspace{3mm}
+
+Znano je, da lahko z deterministično izbiro točk $\{\boldsymbol{x}_i \}$ dosežemo, da je $D_n^*$ veliko manjši kot (2).
+Obstajajo neskončna zaporedja  $\{\boldsymbol{x}_i \}$ v $[0,1)^s$ z $D_n^*(\boldsymbol x_1,\ldots, \boldsymbol x_n) = \mathcal O(log(n)^s/n)$. Takšna zaporedja se imenujejo \textit{zaporedja z nizko diskrepanco?? (low-discepancy sequences)} in njih na temeljijo Kvazi-Monte Carlo metode.
 
 \begin{definicija}{(Zaporedja z nizko diskrepanco)}.
-Zaporedje točk $P = \{\boldsymbol x_n\}_{n\in \N} \subset [0,1)^s$ se imenuje zaporedje z nizko diskrepanco, če je star discerpancy  $D^*_n(P)$ prvih $n$ točk množice $P$ enaka $\mathcal{O}(\frac{ln^sn}{n})$.
+Zaporedje točk $P = \{\boldsymbol x_n\}_{n\in \N} \subset [0,1)^s$ se imenuje zaporedje z nizko diskrepanco, če je star discerpancy  $D^*_n(P)$ prvih $n$ točk množice $P$ enaka $\mathcal{O}(\frac{log (n)^s}{n})$.
 \end{definicija}
 
+Obstaja povezava med manjšo diskrepanco in bolšjim približkom za integral. Povezuje jo \textit{Hlawka-Koksma neenakost?}.
+\vspace{2mm}
+\begin{izrek}[Neenakost Hlawka-Koksma]
+Naj ima funkcija f variacijo? V(f) v smislu Hardy-Krause. Potem za poljubno množico točk $P = \{\boldsymbol{x}_1,\ldots,\boldsymbol{x}_n\}$ v $[0,1)^s$ velja
+
+\begin{equation}
+\left\lvert\frac{\sum_{i=1}^{n} f(\boldsymbol{x}_i}{n} - \int_{[0,1)^s} f(\boldsymbol{x})d\boldsymbol{x} \right\rvert \leq V(f)D_n^*(P).
+\end{equation}
+\end{izrek}
+\vspace{4mm}
+
+Definicija za V(f)??? (podana je v [26] Harald Niederreiter. Random Number Generation and Quasi-Monte Carlo
+Methods. S.I.A.M., Philadelphia, PA, 1992.)
 
 
 % slovar
